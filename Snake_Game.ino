@@ -38,8 +38,7 @@
  */
 
 #include <MeggyJrSimple.h>    // Required code, line 1 of 2.
-int xplayer = 3;              //coordinates of player dot
-int yplayer = 4;
+
 int marker = 3;
 int xapple = random(8);
 int yapple = random(8);
@@ -51,19 +50,21 @@ struct Point
 {
   int x;
   int y;
-  
 };
 Point p1 = {3,4};
-Point p2 = {4,3};
+Point p2 = {4,4};
 Point p3 = {5,4};
+Point p4 = {6,4};
 
-Point snakeArray [64] = {p1,p2,p3};
+Point snakeArray[64] = {p1,p2,p3,p4};
 
-void drawsnake()
+
+
+void drawSnake()
 {
-  for(int i=0; i<marker; i++);
+  for(int i=0; i<marker; i++)
     {
-      DrawPx(snakeArray [i].x, snakeArray [i].y, Red);
+      DrawPx(snakeArray[i].x, snakeArray[i].y, Red);
     }
 }    
 
@@ -71,6 +72,14 @@ void setup()                    // run once, when the sketch starts
 {
   Serial.begin(9600);
   MeggyJrSimpleSetup();      // Required code, line 2 of 2.
+}
+
+void updateSnake()
+{
+  for(int i = marker - 1; i > 0; i--)
+  {
+    snakeArray[i] = snakeArray[i - 1];
+  }
 }
 
 
@@ -87,74 +96,79 @@ void loop()                     // run over and over again
 
 {
   Serial.print("X is");
-  Serial.println(xplayer);
+  Serial.println(snakeArray[0].x);
   Serial.print("Y is");
-  Serial.println(yplayer);
+  Serial.println(snakeArray[0].y);
   Serial.println();
   
-  DrawPx(xplayer,yplayer,Red);
-  DrawPx(xapple,yapple,Green);
+  
+  drawSnake();
+  DrawPx(snakeArray[0].x, snakeArray[0].y, Orange);
   DisplaySlate();
-  delay(300);
+  delay(150);
   ClearSlate();
+  updateSnake();
+  DrawPx(xapple,yapple,Green);
+  
   CheckButtonsPress();
   if (Button_Right)
   {
     dir = 90;
   }
   if(dir==0)
-    {
-      yplayer ++;
-    }  
+  {
+    snakeArray[0].y ++;
+  }  
   if (Button_Left)
   {
     dir = 270;
   }
   if(dir==90)
-    {
-      xplayer ++;
-    }  
+  {
+    snakeArray[0].x ++;
+  }  
   if (Button_Up)
   {
     dir = 0;
   }
   if(dir==180)
-    {
-      yplayer --;
-    }  
+  {
+    snakeArray[0].y --;
+  }  
   
   if (Button_Down)
   {
     dir = 180;
   }
   if(dir==270)
+  {
+    snakeArray[0].x --;
+  }  
+  if(snakeArray[0].x > 7)
+  {
+    snakeArray[0].x = 0;
+  }  
+  if(snakeArray[0].y > 7)
+  {
+    snakeArray[0].y = 0;
+  }   
+  if(snakeArray[0].x < 0)
+  {
+    snakeArray[0].x = 7;
+  }  
+  if(snakeArray[0].y < 0)
+  {
+    snakeArray[0].y = 7;
+  } 
+  if (xapple == snakeArray[0].x)
+  {
+    if(yapple == snakeArray[0].y)
     {
-      xplayer --;
-    }  
-  if(xplayer > 7)
-    {
-      xplayer=0;
-    }  
-  if(yplayer > 7)
-    {
-      yplayer=0;
-    }   
-  if(xplayer < 0)
-    {
-      xplayer=7;
-    }  
-  if(yplayer < 0)
-    {
-      yplayer=0;
-    } 
-  if (xapple==xplayer)
-    {
-      if(yapple==yplayer)
-        {
-          xapple = random(8);
-          yapple = random(8);
-        }
+       xapple = random(8);
+       yapple = random(8);
+       marker ++;
     }
+  }
     
  
     
