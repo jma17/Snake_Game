@@ -167,9 +167,8 @@ void loop()                     // run over and over again
        xapple = random(8);
        yapple = random(8);
        marker ++;
+       Tone_Start(4000, 50);
+       
     }
-  }
-    
- 
-    
+  }  
 }
